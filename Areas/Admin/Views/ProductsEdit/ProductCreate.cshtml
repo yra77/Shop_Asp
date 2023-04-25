@@ -1,0 +1,267 @@
+﻿@inject Shop_Asp.Domain.DataManager _dataManager;
+@model Product
+@{
+    Sizes _sizes = new Sizes();
+    Colors _colors = new Colors();
+}
+@{
+    ViewData["Title"] = "Product Create";
+}
+
+<h1 class="text-center mt-2 mb-2">Product Create</h1>
+
+<div class="row m-auto">
+    <div class="col">
+
+        <form asp-action="ProductCreate"
+              asp-area="Admin"
+              asp-controller="ProductsEdit"
+              method="post"
+              enctype="multipart/form-data">
+
+
+            <div class="form-group mt-4">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <div class="d-block">
+                    <label asp-for="Brand" class="control-label"></label>
+                    <select class="form-select"
+                            asp-for="Brand"
+                            asp-items="(_dataManager.BrandsRepo.GetBrands())
+                                    .Select(x => new SelectListItem(){Text = x.NameBrand, Value = x.NameBrand})">
+                        <option value="">Add Brand</option>
+                    </select>
+                </div>
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group mt-4">
+
+                <label asp-for="Sizes" class="control-label"></label>
+
+                <div class="col d-flex">
+
+                    <input asp-for="Sizes" class="form-control" id="sizeInp" />
+
+                    <select class="form-select-sm"
+                            id="sizeSelect">
+                        <option value="">Add size</option>
+                        @foreach (var val in _sizes)
+                        {
+                            <option value="@val">@val</option>
+                        }
+                    </select>
+
+                </div>
+
+                <span asp-validation-for="Sizes" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group mt-4">
+                <label asp-for="Colors" class="control-label"></label>
+
+                <div class="col d-flex">
+
+                    <input asp-for="Colors"
+                           class="form-control"
+                           id="colorInp" />
+
+                    <select class="form-select-sm"
+                            id="colorSelect">
+                        <option class="bg-info" value="">Add Color</option>
+                        @foreach (var val in _colors)
+                        {
+                            <option style="background:@val; border-color:solid gray" value="@val">@val</option>
+                        }
+                    </select>
+                </div>
+
+                <span asp-validation-for="Colors" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group mt-4">
+                <label asp-for="Count" class="control-label"></label>
+                <input asp-for="Count" class="form-control" />
+                <span asp-validation-for="Count" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="Gender" class="control-label"></label>
+                <input asp-for="Gender" maxlength="1" class="form-control" />
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mt-4">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsNew" /> @Html.DisplayNameFor(model => model.IsNew)
+                </label>
+            </div>
+
+            <div class="form-group form-check mt-4">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsBestSeller" /> @Html.DisplayNameFor(model => model.IsBestSeller)
+                </label>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="DescriptionEn" class="control-label"></label>
+                <input asp-for="DescriptionEn" class="form-control" />
+                <span asp-validation-for="DescriptionEn" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="DescriptionUa" class="control-label"></label>
+                <input asp-for="DescriptionUa" class="form-control" />
+                <span asp-validation-for="DescriptionUa" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+
+
+            <div class="container mt-4">
+                <div class="row text-center">
+
+                    <div class="col-sm form-group mt-4">
+                        <label asp-for="@Model.Photos_Large"
+                               class="control-label text-secondary text-opacity-75">
+                            Photo
+                        </label>
+
+                        <input type="file"
+                               asp-for="@Model.Photos_Large"
+                               name="ProdImgPath"
+                               id="imageList"
+                               class="input form-control form-control-sm"
+                               multiple />
+
+                        <div class="divImg d-flex text-center overflow-auto mt-2">
+                            @if (Model.Photos_Large.Count > 0)
+                            {
+                                foreach (var image in Model.Photos_Large)
+                                {
+                                    <img class="img d-block m-auto"
+                                         asp-for="@Model.Photos_Large"
+                                         alt="Shop snickers"
+                                         src="~/Images/@image.Image" />
+                                }
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group mt-4">
+                <input type="submit" value="Create" class="btn btn-primary w-100 mt-4" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="mt-5 mb-5 text-center">
+    <a asp-area="Admin"
+       asp-controller="Home"
+       asp-action="Index">
+        Back to List
+    </a>
+</div>
+
+
+<script>
+
+    window.onload = function () {
+
+        let imgArr = new Array();
+        const sizeVal = document.getElementById("sizeInp");
+        const colorVal = document.getElementById("colorInp");
+
+        $("#sizeSelect").on("change", function () {
+            (sizeVal.value.length === 0) ? sizeVal.value += $(this).val() : sizeVal.value += (" " + $(this).val());
+        });
+
+        $("#colorSelect").on("change", function () {
+            (colorVal.value.length === 0) ? colorVal.value += $(this).val() : colorVal.value += (" " + $(this).val());
+        });
+
+        $("#imageList").on("change", function (e) {
+            //create img
+            let img = document.createElement('img');
+            img.style.margin = "1em";
+
+            const divimg = document.querySelector(".divImg");
+             divimg.innerHTML = '';//clear into div
+
+            let files = e.target.files;//file list from input event
+            let imgclone = new Array();
+
+            for (let i = 0; i < files.length; i++) {
+
+                if (imgArr.findIndex(e => e.name === files[i].name) === -1) {
+                    
+                    imgArr.push(files[i]);
+                    let reader = new FileReader();
+                    reader.readAsDataURL(files[i]);
+
+                    imgclone[i] = img.cloneNode(true);
+                    divimg.appendChild(imgclone[i]);
+
+                    reader.onload = () => {
+                        imgclone[i].setAttribute("src", reader.result);
+                    }
+                }
+            }
+
+            const dataTransfer = new DataTransfer();
+
+            for (let j = 0; j < imgArr.length; j++) {
+                dataTransfer.items.add(imgArr[j]);
+            }
+            e.target.files = dataTransfer.files;
+        });
+
+
+        const imgEditData = document.getElementsByClassName("img");
+        try {
+            if (imgEditData[0].src.length > 0) 
+            {
+                var inp = document.getElementById("imageList");
+                const dataTransfer = new DataTransfer();
+                for (let v = 0; v < imgEditData.length; v++) 
+                {
+                    // Create a new File object
+                    const myFile = new File(['logo'], imgEditData[v].src.split('/').pop(), {
+                        type: 'image/png',
+                        lastModified: new Date(),
+                    });
+                    
+                    // Now let's create a DataTransfer to get a FileList
+                    if (imgArr.findIndex(e => e.name === myFile.name) === -1) {
+                        imgArr.push(myFile);
+                        dataTransfer.items.add(myFile);
+                        inp.files = dataTransfer.files;
+                    }
+                }
+            }
+
+        }
+        catch { }
+    }
+</script>

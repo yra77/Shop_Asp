@@ -1,0 +1,31 @@
+﻿
+@{
+    string strTitle = "Admin panel";
+    ViewBag.Title = strTitle;
+}
+@{
+    //Layout = null;
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between">
+    <h4 class="text-center">@strTitle</h4>
+        <form class="ml-auto" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+            <input class="btn btn-danger btn-sm rounded-3" type="submit" value="Exit" />
+        </form>
+    </div>
+
+    <div class="container mt-5">
+
+        <a class="d-block fs-5 mb-1" asp-area="Admin" asp-controller="ShopModels" asp-action="ShopEdit">Edit main fields</a>
+        <a class="d-block fs-5 mt-1 mb-1" asp-area="Admin" asp-controller="ProductsEdit" asp-action="ProductsEdit">Edit products</a>
+        <a class="d-block fs-5 mb-2" asp-area="Admin" asp-controller="ProductsEdit" asp-action="ProductCreate">Create product</a>
+        <a class="d-block fs-5" asp-area="Admin" asp-controller="Brands" asp-action="BrandsEdit">Edit brands</a>
+
+    </div>
+
+</div>
+
+
+

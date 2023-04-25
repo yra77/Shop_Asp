@@ -1,0 +1,7 @@
+﻿input:active{
+    border-color:cornflowerblue;
+}
+
+input:focus {
+    border-color: cornflowerblue;
+}

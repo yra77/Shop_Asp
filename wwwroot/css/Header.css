@@ -1,0 +1,88 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+
+
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+.logo {
+    font-size: smaller;
+    text-align: center;
+}
+
+a {
+    color: #0077cc;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/*Search*/
+
+@media (min-width: 741px) {
+    .heder_search_filter {
+        margin-left: auto;
+        display: flex;
+    }
+}
+
+@media (max-width: 740px) {
+    .heder_search_filter {
+        margin-left: auto;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        display: flex;
+    }
+}
+
+.btnFilter {
+    cursor: pointer;
+    margin-bottom: 0.2em;
+    margin-right: 1em;
+}
+
+    .btnFilter:active {
+        background-color: lightblue;
+    }
+
+    .btnFilter:hover {
+        background-color: lightblue;
+    }
+
+.heder_search_filter .searchInp {
+    margin-right: 0.5em;
+    vertical-align: middle;
+    height:min-content;
+}
+/*End search*/

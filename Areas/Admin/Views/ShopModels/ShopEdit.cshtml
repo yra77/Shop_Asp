@@ -1,0 +1,163 @@
+﻿@model ShopModel
+
+@{
+    ViewData["Title"] = "ShopEdit";
+}
+
+
+<div class="row">
+
+    <h1 class="text-center">ShopEdit</h1>
+
+    <div class="col-md-4">
+
+        <form asp-action="ShopEdit"
+              asp-area="Admin"
+              asp-controller="ShopModels"
+              method="post" enctype="multipart/form-data">
+
+            <div asp-validation-summary="ModelOnly" id="errTetx" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group mt-4">
+                <label asp-for="Title" class="control-label text-secondary text-opacity-75"></label>
+                <input asp-for="Title" class="input form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="CompanyName" class="control-label text-secondary text-opacity-75"></label>
+                <input asp-for="CompanyName" class="input form-control" />
+                <span asp-validation-for="CompanyName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="CompanyEmail" class="control-label text-secondary text-opacity-75"></label>
+                <input asp-for="CompanyEmail" class="input form-control" />
+                <span asp-validation-for="CompanyEmail" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="CompanyPhone" class="control-label text-secondary text-opacity-75"></label>
+                <input asp-for="CompanyPhone" class="input form-control" />
+                <span asp-validation-for="CompanyPhone" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="DescriptionCompany" class="control-label text-secondary text-opacity-75"></label>
+                <input asp-for="DescriptionCompany" class="input form-control" />
+                <span asp-validation-for="DescriptionCompany" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="LogoImgPath" class="control-label text-secondary text-opacity-75"></label>
+
+                <label typeof="hiden"
+                       id="inpImgReserve"
+                       data="~Images/@Model.LogoImgPath" />
+
+                <input type="file"
+                       asp-for="LogoImgPath"
+                       name="LogoImgPath"
+                       id="LogoImgPath"
+                       class="input form-control form-control-sm" />
+
+                <img class="d-block m-auto"
+                     asp-for="LogoImgPath"
+                     id="img"
+                     alt="Shop snickers"
+                     src="~/Images/@Model.LogoImgPath" />
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="MetaTitle" class="control-label text-secondary text-opacity-75"></label>
+                <input asp-for="MetaTitle" class="input form-control" />
+                <span asp-validation-for="MetaTitle" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="MetaDescription" class="control-label text-secondary text-opacity-75"></label>
+                <input asp-for="MetaDescription" class="input form-control" />
+                <span asp-validation-for="MetaDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <label asp-for="MetaKeywords" class="control-label text-secondary text-opacity-75"></label>
+                <input asp-for="MetaKeywords" class="input form-control" />
+                <span asp-validation-for="MetaKeywords" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <input type="submit" id="btnSave" value="Save" class="btn btn-primary w-100 mt-3" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mt-5 mb-5 text-center">
+    <a asp-area="Admin"
+       asp-controller="Home"
+       asp-action="Index"
+    >
+       Back to List
+   </a>
+</div>
+
+
+
+<script type="text/javascript" language="javascript">
+
+
+    window.onload = function () {
+
+        //timer waiting for download from database
+        setTimeout(() => {
+
+            var inpValue = document.getElementById('LogoImgPath').value;
+
+            if (!inpValue) {
+                const img = document.querySelector("#inpImgReserve").getAttribute("data");
+                const fileInput = document.querySelector('input[type="file"]');
+                const ImagePath = img.split("/");
+
+                // Create a new File object
+                const myFile = new File(['logo'], ImagePath[1], {
+                    type: 'image/png',
+                    lastModified: new Date(),
+                });
+
+                // Now let's create a DataTransfer to get a FileList
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(myFile);
+                fileInput.files = dataTransfer.files;
+
+                document.getElementById('img').src = "/Images/" + ImagePath[1];
+            }
+
+        }, 200);
+
+        //event on change
+        $("#LogoImgPath").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            document.getElementById('img').src = "/Images/" + fileName;
+        });
+
+        //check input field
+        $("#btnSave").on("click", (event) => {
+            const inp = document.querySelectorAll(".input");
+            let isEmptyInput = true;
+
+            inp.forEach((item) => {
+                if (!item.value) {
+                    isEmptyInput = false;
+                }
+            });
+            if (!isEmptyInput) {
+                document.getElementById("errText").innerHtml = "<h6>Fill in all the fields</h6>";
+                event.preventDefault();
+            }
+        });
+
+    }
+
+</script>

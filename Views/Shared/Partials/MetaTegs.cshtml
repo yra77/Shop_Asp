@@ -1,0 +1,24 @@
+﻿@inject DataManager _dataManager
+@{
+    var _shopData = _dataManager.ShopRepo.GetShopData().ToList()[0];
+}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+@if (_shopData.Title != null)
+{
+    <title>_shopData.Title</title>
+}
+else
+{
+    <title>Shoes Shop</title>
+}
+@if (_shopData.MetaDescription != null)
+{
+    <meta name="description" content="@_shopData.MetaDescription" />
+}
+@if (_shopData.MetaKeywords != null)
+{
+    <meta name="keywords" content="_shopData.MetaKeywords" />
+}
+<title>@ViewData["Title"]</title>

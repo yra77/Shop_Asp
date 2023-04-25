@@ -1,0 +1,146 @@
+﻿@model IEnumerable<Shop_Asp.Domain.Entities.Brand>
+
+@{
+    ViewData["Title"] = "BrandsEdit";
+}
+
+<h1>BrandsEdit</h1>
+
+<p>
+    <a asp-action="BrandCreate"
+       asp-area="Admin"
+       asp-controller="Brands"
+    >
+    Create New
+</a>
+</p>
+<table class="table overflow-auto mb-5">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NameBrand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LogoBrands)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+            <tr id="@item.Id">
+
+                <Form asp-action="BrandsEdit"
+                      asp-area="Admin"
+                      asp-controller="Brands"
+                      method="post"
+                      enctype="multipart/form-data">
+
+                    <input type="hidden" asp-for="@item.Id" />
+            <td>
+                    <input asp-for="@item.NameBrand" class="form-control form-control" />
+                    <span asp-validation-for="@item.NameBrand" class="text-danger"></span>
+            </td>
+            <td class="d-flex align-self-center">
+                <img src="~/Images/@item.LogoBrands" 
+                     width="45" 
+                     height="30" 
+                     id="@item.NameBrand"
+                     class="align-self-center"/>
+
+                    <input type="file"
+                       asp-for="@item.LogoBrands"
+                       name="BrandImgPath"
+                       data-id="@item.NameBrand"
+                       class="input form-control"/>
+            </td>
+            <td>
+                    <input class="btnEdit btn btn-outline-info"
+                       asp-action="BrandsEdit" 
+                       asp-area="Admin"
+                       asp-controller="Brands"
+                       asp-for="@item.Id"
+                       type="submit"
+                       value="Edit"
+                    />
+
+                    <a class="btnDelete btn btn-outline-info"
+                       data-id="@item.Id">
+                    Delete
+                </a>
+            </td>
+                </Form>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+                       <script>
+    window.onload = function () {
+
+        ////timer waiting for download from database
+        //setTimeout(() => {
+
+        //    var inpValue = document.getElementById('LogoImgPath').value;
+
+        //    if (!inpValue) {
+        //        const img = document.querySelector("#inpImgReserve").getAttribute("data");
+        //        const fileInput = document.querySelector('input[type="file"]');
+        //        const ImagePath = img.split("/");
+
+        //        // Create a new File object
+        //        const myFile = new File(['logo'], ImagePath[1], {
+        //            type: 'image/png',
+        //            lastModified: new Date(),
+        //        });
+
+        //        // Now let's create a DataTransfer to get a FileList
+        //        const dataTransfer = new DataTransfer();
+        //        dataTransfer.items.add(myFile);
+        //        fileInput.files = dataTransfer.files;
+
+        //        document.getElementById('img').src = "/Images/" + ImagePath[1];
+        //    }
+
+        //}, 200);
+
+        //event on change
+        $(".input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            var brend = $(this).data("id");
+            document.getElementById(brend).src = "/Images/" + fileName;
+        });
+
+        $(".inputnew").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            document.getElementById('NewBrand').src = "/Images/" + fileName;
+        });
+
+        $(".btnDelete").on("click", function () {
+
+            var dataid = $(this).data("id");
+
+            $.ajax({
+                type: "post",
+                url: '@Url.Action("BrandDelete", "Brands")?id=' + dataid,
+                contentType: "application/json",
+                data: { dataid },
+                async: true,
+                cache: false,
+                success: function (result) {
+                    var elem = document.getElementById(dataid);//знаходимо та виділяємо картку з екрану
+                    elem.remove();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    console.error(jqXHR);
+                    //  let errorDetails = doParseResponseErrorDetails(jqXHR);
+                    //  doPopStatus("ERROR", "Something went haywire in the post. Try Again.<p>" + jqXHR.status + ": " + jqXHR.statusText + "<br />" + '<div class="bs-callout bs-callout-danger">' + errorDetails + "</div></p>", "modal-header alert-danger", "fa fa-exclamation-circle text-danger", "alert", "text-danger");
+                }
+            });
+
+        });
+
+    }
+                       </script>

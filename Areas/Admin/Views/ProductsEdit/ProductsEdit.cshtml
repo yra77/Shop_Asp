@@ -1,0 +1,260 @@
+﻿@model IEnumerable<Shop_Asp.Domain.Entities.Product>
+
+@{
+    ViewData["Title"] = "ProductsEdit";
+}
+
+<div class="row mw-100 m-auto">
+
+    <h4 class="text-center">Products Edit</h4>
+
+    <p class="mt-3">
+        <a asp-area="Admin"
+           asp-controller="ProductsEdit"
+           asp-action="ProductCreate"
+           class="fw-bold">
+            Create new product
+        </a>
+
+    </p>
+
+        <form asp-action="Products Edit"
+              asp-area="Admin"
+              asp-controller="ProductsEdit"
+              method="post" enctype="multipart/form-data">
+
+              <div class="row justify-content-center">
+            @foreach (var item in Model)
+            {
+
+                <div class="col-1 card shadow mt-4 m-auto p-0" 
+                     style="width: 18rem;"
+                     id="@item.Id"
+                >
+
+                    <input type="hidden" asp-for="@item.Id" />
+
+                    <img class="card-img-top" src="~/Images/@item.Photos_Large[0].Image" alt="@item.Name">
+
+                    <div class="card-body">
+
+                        <div class="d-flex" style="height:1em;">
+                            @if(item.IsNew)
+                            {
+                                <small class="text-info float-start">New</small>
+                            }
+                            @if (item.IsBestSeller)
+                            {
+                                <small class="text-info float-end">Best</small>
+                            }
+                        </div>
+                        
+                        <h6 class="card-title">@item.Name</h6>
+                        <label class="d-block fw-bolder">@item.Brand</label>
+                        <small>Gender: <span class="fw-bold">@item.Gender</span></small>
+                        <label class="d-block">Sizes: @item.Sizes</label>
+                        
+                        <div class="d-flex mt-1 mb-1">Color: 
+                            @{
+                                var colors = item.Colors.Split(' ');
+                                foreach(var color in colors)
+                                {
+                                    <button style="background-color:@color;margin-left:0.5em;" 
+                                            class="btn btn-outline-secondary rounded-circle">
+                                    </button>
+                                }
+                            }
+                        </div>
+                        
+                        <p class="fs-6 text-truncate">@item.DescriptionEn</p>
+
+                        <label>Price: @item.Price<span>$</span></label>
+
+                        </div>
+
+                        <div class="mt-2 d-flex">
+                            <a type="submit" 
+                                   class="btn btn-outline-info w-50" 
+                                   asp-area="Admin" 
+                                   asp-controller="ProductsEdit" 
+                                   asp-action="ProductCreate"
+                                   asp-route-id="@item.Id"
+                            >
+                            Edit
+                        </a>
+                           
+                            <a class="btnDelete btn btn-outline-info w-50"             
+                               data-id="@item.Id"
+                            >
+                            Delete
+                        </a>
+
+                        </div>
+                </div>
+
+            }
+            </div>
+
+            <div class="form-group mt-4 w-100 mt-4">
+                @*<input type="submit" id="btnSave" value="Save" class="btn btn-primary w-100 mt-3" />*@
+            </div>
+
+        </form>
+
+</div>
+
+<div class="mt-5 mb-5 text-center fw-bold">
+    <a asp-area="Admin"
+       asp-controller="Home"
+       asp-action="Index">
+        Back to List
+    </a>
+</div>
+
+
+<script>
+    window.onload = function () {
+      
+        $(".btnDelete").on("click", function () {
+
+            var dataid = $(this).data("id");
+
+            $.ajax({
+                type: "post",
+                url: '@Url.Action("ProductDelete", "ProductsEdit")?id=' + dataid,
+                contentType: "application/json",
+                data: {dataid},
+                async: true,
+                cache: false,
+                success: function (result) {
+                    var elem = document.getElementById(dataid);//знаходимо та виділяємо картку з екрану
+                    elem.remove();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                   
+                    console.error(jqXHR);
+                  //  let errorDetails = doParseResponseErrorDetails(jqXHR);
+                  //  doPopStatus("ERROR", "Something went haywire in the post. Try Again.<p>" + jqXHR.status + ": " + jqXHR.statusText + "<br />" + '<div class="bs-callout bs-callout-danger">' + errorDetails + "</div></p>", "modal-header alert-danger", "fa fa-exclamation-circle text-danger", "alert", "text-danger");
+                }
+            });
+
+        });
+    };
+
+</script>
+
+
+@*
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sizes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Colors)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Count)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsNew)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsBestSeller)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DescriptionEn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DescriptionUa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Brand)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sizes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Colors)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsNew)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsBestSeller)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DescriptionEn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DescriptionUa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+
+                <td>
+
+                    @for(int i = 0; i < 3; i++)
+                    {
+                        <div class="col form-group mt-4">
+                            <label asp-for="@item.Photos_Large[i].Image"
+                                   class="control-label text-secondary text-opacity-75">
+                            </label>
+
+                            <input type="file"
+                           asp-for="@item.Photos_Large[i].Id"
+                           name="ProdImgPath"
+                                   class="input form-control form-control-sm" />
+
+                            <img class="img d-block m-auto"
+                                 alt="Shop snickers"
+                                 src="~/Images/@item.Photos_Large[i].Image" />
+                        </div>
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>*@

@@ -1,0 +1,70 @@
+﻿@inject DataManager _dataManager
+@{
+    var shopData = _dataManager.ShopRepo.GetShopData().ToList()[0];
+}
+<header>
+    <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-light bg-white border-bottom box-shadow mb-3">
+        
+        <div class="container-fluid">
+            
+            <a class="navbar-brand logo" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/Images/@shopData.LogoImgPath"
+                     height="25"
+                     width="25"
+                     className=""
+                     alt="Logo Shop" />
+                <small class="d-block">@shopData.Title</small>
+            </a>
+            
+            <button class="navbar-toggler" 
+                     type="button" 
+                     data-bs-toggle="collapse" 
+                     data-bs-target=".navbar-collapse" 
+                     aria-controls="navbarSupportedContent"
+                    aria-expanded="false" 
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="navbar-collapse collapse d-md-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                    </li>
+                </ul>
+
+
+                <div class="heder_search_filter justify-content-center">
+
+                <img class="btnFilter"
+                     src="~/Images/filter.png"
+                     alt="filters"
+                     onClick="ClickModal_Filter()" />
+
+                <input type="text"
+                       name="search"
+                       placeholder="search"
+                       class="searchInp border-secondary bg-transparent shadow-none"
+                       onClick="OnFocusInp_Search()" />
+
+                <button type="button"
+                            class="btn btn-sm btn-outline-secondary shadow-none mb-1">
+                    Search
+                </button>
+
+            </div>
+
+
+            </div>
+        </div>
+    </nav>
+</header>

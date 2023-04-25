@@ -1,0 +1,59 @@
+﻿
+@model LoginAdminViewModel
+
+<div class="container-md d-block">
+    
+    <h4 class="text-center fw-normal">Login to account of the admin</h4>
+
+    <div class="div-box mt-5 d-flex justify-content-center">
+
+        <form asp-area="" 
+              asp-controller="Account" 
+              asp-action="Login" 
+              method="post" 
+              asp-route-returnUrl="@ViewBag.returnUrl"
+              class="d-block">
+
+          @*  <div asp-validation-summary="All"></div>*@
+            <div>
+                <label asp-for="UserName"
+                       class="d-block text-secondary text-opacity-75">
+                       Login
+            </label>
+                <input asp-for="UserName" 
+                       class="border border-info shadow-none form-control form-sm" />
+                <span asp-validation-for="UserName"
+                      class="d-block text-danger fw-bold">
+                  </span>
+            </div>
+
+            <div class="mt-2">
+                <label asp-for="Password"
+                       class="d-block text-secondary text-opacity-75">
+                       Password
+            </label>
+                <input asp-for="Password"
+                       class="border border-info shadow-none form-control form-sm" />
+                <span asp-validation-for="Password"
+                      class="d-block text-danger fw-bold">
+                  </span>
+            </div>
+
+            <div class="mt-2">
+                
+                <input asp-for="RememberMe" />
+                <label asp-for="RememberMe"
+                       class="text-secondary text-opacity-75">
+                    Remember me
+                </label>
+                <span asp-validation-for="RememberMe"></span>
+            </div>
+
+            <div class="mt-5 text-center">
+                <input class="btn btn-info w-100 text-white shadow-none"
+                       type="submit" 
+                       value="Войти" />
+            </div>
+        </form>
+    </div>
+</div>
