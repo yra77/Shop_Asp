@@ -1,10 +1,109 @@
 ﻿
-
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="">
+    
+    <div class="container mt-3 mb-3 homeCarousel">
+       
+        <h3 class="fw-bold text-black text-start">New Collection</h3>
+
+        <div class="slider">
+            @foreach (Product newproduct in ViewBag.NewProducts)
+            {
+                <div class="slide d-flex">
+                    <img src="~/Images/@newproduct.Photos_Large[0].Image"
+                         alt="@newproduct.Name" />
+                         <h2 class="textH2">New</h2>
+                         <h3 class="textH3">@newproduct.Price$</h3>
+                         <h5 class="textH5">@newproduct.DescriptionEn</h5>
+                </div>
+            }
+            <button class="btn btn-next"></button>
+            <button class="btn btn-prev"></button>
+        </div>
+    </div>
+
+
+    <div class="container bestShoes">
+
+        <h3 class="fw-bold text-black text-start">Best shoes</h3>
+
+        <div class="w-100 m-auto row">
+
+            @foreach (Product item in ViewBag.BestProducts)
+            {
+                <div class="col-1 card shadow mt-4 m-auto p-0"
+                     style="width: 18rem;"
+                     id="@item.Id">
+
+                    <img class="card-img-top" 
+                         src="~/Images/@item.Photos_Large[0].Image" 
+                         alt="@item.Name"/>
+
+                    <div class="card-body">
+
+                        <div class="d-flex w-100" style="height:1em;">
+                            
+                            @if (item.IsNew)
+                            {
+                                <small class="text-info w-25 mr-auto">New</small>
+                            }
+                            <div class="w-75">   </div>
+                            @if (item.IsBestSeller)
+                            {
+                                <p class="text-info float-end">Best</p>
+                            }
+                        </div>
+
+                        <h6 class="card-title mt-2">@item.Name</h6>
+                        <label class="d-block fw-bolder">@item.Brand</label>
+                        <small>Gender: <span class="fw-bold">@item.Gender</span></small>
+                        <label class="d-block">Sizes: @item.Sizes</label>
+
+                        <div class="d-flex mt-1 mb-1">
+                            Color:
+                            @{
+                                var colors = item.Colors.Split(' ');
+                                foreach (var color in colors)
+                                {
+                                    <button style="background-color:@color; margin-left:0.5em;"
+                                            class="btn btn-outline-secondary rounded-circle">
+                                    </button>
+                                }
+                            }
+                        </div>
+
+                        <p class="fs-6 text-truncate">@item.DescriptionEn</p>
+
+                        <label>Price: <span class="fw-bold">$@item.Price</span></label>
+
+                    </div>
+
+                    <div class="mt-2 d-flex">
+                        <a type="submit"
+                           class="btn btn-outline-info w-50"
+                       asp-area=""
+                       asp-controller=""
+                       asp-action=""
+                       asp-route-id="@item.Id">
+                            Add Favorite
+                        </a>
+
+                        <a class="btnDelete btn btn-outline-info w-50"
+                           data-id="@item.Id">
+                            Add Cart
+                        </a>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
 </div>
+
+<script src="~/js/Sliders/Carousel.js" asp-append-version="true"></script>
+<link rel="stylesheet" href="~/js/Sliders/Css/Carousel.css" asp-append-version="true" />

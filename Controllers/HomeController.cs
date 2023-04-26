@@ -27,6 +27,9 @@ namespace Shop_Asp.Controllers
 
         public IActionResult Index()
         {
+            var arr = _dataManager.ProductsRepo.GetProducts();
+            ViewBag.NewProducts = arr.Where(x => x.IsNew == true).ToList();
+            ViewBag.BestProducts = arr.Where(x => x.IsBestSeller == true).ToList();
             return View();
         }
 

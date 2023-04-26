@@ -7,7 +7,7 @@
 
 @if (_shopData.Title != null)
 {
-    <title>_shopData.Title</title>
+    <title>@_shopData.Title</title>
 }
 else
 {
@@ -19,6 +19,6 @@ else
 }
 @if (_shopData.MetaKeywords != null)
 {
-    <meta name="keywords" content="_shopData.MetaKeywords" />
+    <meta name="keywords" content="@_shopData.MetaKeywords" />
 }
 <title>@ViewData["Title"]</title>

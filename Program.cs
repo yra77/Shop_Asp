@@ -16,7 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();// options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
 
-
 //add services
 builder.Services.AddScoped<IBrandsRepository, BrandsRepository>();
 builder.Services.AddScoped<IShopRepository, ShopRepository>();

@@ -1,6 +1,7 @@
 ﻿@inject DataManager _dataManager
 @{
     var shopData = _dataManager.ShopRepo.GetShopData().ToList()[0];
+    var brands = _dataManager.BrandsRepo.GetBrands();
 }
 <header>
     <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-light bg-white border-bottom box-shadow mb-3">
@@ -67,4 +68,17 @@
             </div>
         </div>
     </nav>
+
+    <div class="text-center mt-2 mb-4">
+        @foreach(var brand in brands)
+        {
+            <img class="brandsImg border border-info rounded-pill"
+             src="~/Images/@brand.LogoBrands" 
+             data-id="@brand.NameBrand" 
+             width="50" 
+             height="30" 
+             alt="@brand.NameBrand" />
+        }
+    </div>
+
 </header>

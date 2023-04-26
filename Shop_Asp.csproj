@@ -7,9 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\sliders\Carousel.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\sliders\Carousel.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Models\ViewComponents\" />
     <Folder Include="wwwroot\Images\productPhoto\" />
     <Folder Include="wwwroot\sass\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\sliders\Carousel.js" />
   </ItemGroup>
 
   <ItemGroup>

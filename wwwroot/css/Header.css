@@ -86,3 +86,9 @@ button.accept-policy {
     height:min-content;
 }
 /*End search*/
+
+/*Brands*/
+.brandsImg{
+    cursor:pointer;
+}
+/*End Brand*/
