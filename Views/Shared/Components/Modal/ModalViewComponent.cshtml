@@ -1,0 +1,31 @@
+﻿@model IHtmlContent
+
+
+<div class="modal min-vh-25" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                @Model
+            </div>
+
+            <div class="modal-footer">
+                @if (!(bool)ViewBag.IsMessage)
+                {
+                    <button type="button"
+                            class="btn btn-info"
+                            onclick="ClickModalComplite(event)"
+                    >
+                        Ok
+                    </button>
+                }
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                        onclick="CloseModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

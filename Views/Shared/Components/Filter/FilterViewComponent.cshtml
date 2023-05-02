@@ -1,0 +1,143 @@
+﻿
+
+<div class="row m-auto" id="filters">
+    <h4 class="text-center">Filter</h4>
+
+    <small>Gender :</small>
+    <div class="col btn-group text-center" role="group" aria-label="genders checkbox">
+        <button type="button"
+                 name="m"
+                 onclick="GenderClick(event)"
+                 class="btn btn-outline-info shadow-none">
+           M
+        </button>
+
+        <button type="button"
+                name="w"
+                onclick="GenderClick(event)"
+                class="btn btn-outline-info shadow-none">
+            W
+        </button>
+
+        <button type="button"
+                name="u"
+                onclick="GenderClick(event)"
+                class="btn btn-outline-info shadow-none">
+            U
+        </button>
+    </div>
+
+    <small>Brands :</small>
+    <div class="btn-group" role="group" aria-label="brands checkbox">
+        @foreach(Brand brand in ViewBag.Brands)
+        {
+          
+            <input type="image"
+                   class="brandBtn"
+                   width="66"
+                   height="40"
+                   name="@brand.NameBrand"
+                   alt="@brand.NameBrand"
+                   onclick="BrandClick(event, '@brand.NameBrand')"
+                   src="~/Images/@brand.LogoBrands" />
+        }
+    </div>
+
+    <small>Sizes :</small>
+    <div class="filterSizeGroup btn-group-toggle">
+
+        @foreach(string size in ViewBag.Sizes)
+        {
+       <button type="button"
+                 onclick="SizeClick(event, @size)"
+                    class="filterSizeBtn btn-rounded btn btn-outline-info shadow-none"
+                    data-toggle="button" 
+                    aria-pressed="true" 
+                    autocomplete="off">
+           @size
+        </button>
+        }
+    </div>
+
+    <small>Price :</small>
+    <div class="filterSlider">
+      @*  <rangeslider-component onClick="ClickSliderRange()"></rangeslider-component>*@
+      @await Component.InvokeAsync("RangeSlider", new {min = 0, max = 600})
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="~/css/Filter.css" asp-append-version="true" />
+
+
+
+<script>
+
+    function ClickModalComplite(event) {
+
+        const min = document.getElementById('rangeMin').value;
+        const max = document.getElementById('rangeMax').value;
+        // genders
+        // brands
+        //sizes
+
+        console.log(min + " " + max);
+        genders.forEach((item) => { console.log(item); });
+        brands.forEach((item) => { console.log(item); });
+        sizes.forEach((item) => { console.log(item); });
+        
+
+        $('#modal').modal('hide');
+        $('#modal').modal('dispose');
+    }
+
+    let genders = new Array();
+    let brands = new Array();
+    let sizes = new Array();
+
+
+    function GenderClick(event) {
+        event.preventDefault();
+        let index = genders.indexOf(event.srcElement.innerText);
+        if (index === -1) 
+        {
+        genders.push(event.srcElement.innerText);
+        }
+        else
+        {
+            genders = genders.toSpliced(index, 1);
+        }
+        event.target.classList.toggle("active");
+        //  console.log(event.srcElement.innerText);
+    }
+
+    function BrandClick(event, brand) {
+        event.preventDefault();
+        let index = brands.indexOf(brand);
+            if (index === -1) 
+        {
+            brands.push(brand);
+        }
+        else {
+            brands = brands.toSpliced(index, 1);
+        }
+        event.target.classList.toggle("active");
+      //  console.log(brand);
+    }
+
+    function SizeClick(event, size) {
+        event.preventDefault();
+
+        let index = sizes.indexOf(size);
+
+            if (index === -1) {
+            sizes.push(size);
+        }
+        else {
+            sizes = sizes.toSpliced(index, 1);
+        }
+        event.target.classList.toggle("active");
+            //  console.log(event.srcElement.innerText);
+    }
+
+</script>

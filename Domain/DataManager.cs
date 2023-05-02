@@ -11,15 +11,19 @@ namespace Shop_Asp.Domain
         public IProductsRepository ProductsRepo { get; set; }
         public IShopRepository ShopRepo { get; set; }
         public IBrandsRepository BrandsRepo { get; set; }
+        public ILoginRepository LoginRepo { get; set; }
 
 
         public DataManager(IProductsRepository prod,
                            IShopRepository shop,
-                           IBrandsRepository brandsRepo)
+                           IBrandsRepository brandsRepo,
+                           ILoginRepository loginRepo)
         {
             ProductsRepo = prod;
             ShopRepo = shop;
             BrandsRepo = brandsRepo;
+            LoginRepo = loginRepo;
+
         }
 
     }

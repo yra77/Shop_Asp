@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shop_Asp.Domain;
 
@@ -11,9 +12,11 @@ using Shop_Asp.Domain;
 namespace Shop_Asp.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230427155513__changeLoginTable")]
+    partial class _changeLoginTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace Shop_Asp.Migrations
                         new
                         {
                             Id = "44546e06-8719-4ad8-b88a-f271ae9d6eab",
-                            ConcurrencyStamp = "521a8c45-e3ee-414c-9750-ff4b594523aa",
+                            ConcurrencyStamp = "ec82fd6f-ee45-4a21-acbd-8263d015226a",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         });
@@ -152,13 +155,13 @@ namespace Shop_Asp.Migrations
                         {
                             Id = "3b62472e-4f66-49fa-a20f-e7685b9565d8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8a1c7c21-5e00-4560-8314-d40ace5ded6c",
+                            ConcurrencyStamp = "9310be9c-7506-4cc6-b2c0-f255f3581f39",
                             Email = "my@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MY@EMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEQz2+caxB+o3Lv/zP8ANUUzNMiZX4ClceMO+MiZ4hT2g7Mpv0ZCr0VrGFiwKZfLgA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFtTGaU/sgPCqj69Zb62y9Nd/nPTTxYwB8Ahy05Hez7gluSrZlOJh4vzLVe0hrbJag==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -506,9 +509,9 @@ namespace Shop_Asp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageAccount")
+                    b.Property<byte[]>("ImageAccount")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()

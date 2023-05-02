@@ -1,13 +1,17 @@
-﻿@inject DataManager _dataManager
+﻿@using Shop_Asp.Domain.Helpers
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@inject DataManager _dataManager
 @{
     var shopData = _dataManager.ShopRepo.GetShopData().ToList()[0];
     var brands = _dataManager.BrandsRepo.GetBrands();
+    var session = HttpContextAccessor.HttpContext.Session.Get<bool>("IsLogin") | false;
 }
 <header>
     <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-light bg-white border-bottom box-shadow mb-3">
-        
+
         <div class="container-fluid">
-            
+
             <a class="navbar-brand logo" asp-area="" asp-controller="Home" asp-action="Index">
                 <img src="~/Images/@shopData.LogoImgPath"
                      height="25"
@@ -16,13 +20,13 @@
                      alt="Logo Shop" />
                 <small class="d-block">@shopData.Title</small>
             </a>
-            
-            <button class="navbar-toggler" 
-                     type="button" 
-                     data-bs-toggle="collapse" 
-                     data-bs-target=".navbar-collapse" 
-                     aria-controls="navbarSupportedContent"
-                    aria-expanded="false" 
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
                     aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -35,34 +39,48 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
-                    </li>
+                    @if (session)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                    </li>
+                    <li class="nav-item">
+                        @if (!session)
+                        {
+                            <a class="nav-link text-success fw-bold" asp-area="" asp-controller="Home" asp-action="AuthUser">Login</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link text-danger fw-bold" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                        }
                     </li>
                 </ul>
 
 
                 <div class="heder_search_filter justify-content-center">
 
-                <img class="btnFilter"
-                     src="~/Images/filter.png"
-                     alt="filters"
-                     onClick="ClickModal_Filter()" />
+                    <input type="image"
+                         class="btnFilter"
+                         src="~/Images/filter.png"
+                         alt="filters"
+                         onclick="ClickModal_Filter()" />
 
-                <input type="text"
-                       name="search"
-                       placeholder="search"
-                       class="searchInp border-secondary bg-transparent shadow-none"
-                       onClick="OnFocusInp_Search()" />
+                    <input type="text"
+                           name="search"
+                           placeholder="search"
+                           class="searchInp border-secondary bg-transparent shadow-none"
+                           onClick="OnFocusInp_Search()" />
 
-                <button type="button"
+                    <button type="button"
                             class="btn btn-sm btn-outline-secondary shadow-none mb-1">
-                    Search
-                </button>
+                        Search
+                    </button>
 
-            </div>
+                </div>
 
 
             </div>
@@ -70,15 +88,33 @@
     </nav>
 
     <div class="text-center mt-2 mb-4">
-        @foreach(var brand in brands)
+        @foreach (var brand in brands)
         {
             <img class="brandsImg border border-info rounded-pill"
-             src="~/Images/@brand.LogoBrands" 
-             data-id="@brand.NameBrand" 
-             width="50" 
-             height="30" 
-             alt="@brand.NameBrand" />
+                 src="~/Images/@brand.LogoBrands"
+                 data-id="@brand.NameBrand"
+                 width="50"
+                 height="30"
+                 alt="@brand.NameBrand" />
         }
     </div>
 
+
+    @await Component.InvokeAsync("Modal",  new { parameters=await Component.InvokeAsync("Filter"), isMessage=false})
 </header>
+
+<script>
+
+    function ClickModal_Filter(){
+        $('#modal').modal('show');
+    }
+
+    function CloseModal(){
+        $('#modal').modal('hide');
+        $('#modal').modal('dispose');
+    }
+
+    window.onload = function(){
+
+    }
+</script>

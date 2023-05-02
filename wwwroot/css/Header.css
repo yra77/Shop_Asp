@@ -73,11 +73,11 @@ button.accept-policy {
 }
 
     .btnFilter:active {
-        background-color: lightblue;
+        background-color: deepskyblue;
     }
 
     .btnFilter:hover {
-        background-color: lightblue;
+        background-color: deepskyblue;
     }
 
 .heder_search_filter .searchInp {

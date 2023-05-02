@@ -14,12 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();// options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
-
+//.AddRazorOptions(options =>
+// {
+//     options.ViewLocationFormats.Add("~/Views/Shared/Components/{0}/{0}.cshtml");
+// });
 
 //add services
 builder.Services.AddScoped<IBrandsRepository, BrandsRepository>();
 builder.Services.AddScoped<IShopRepository, ShopRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
+builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 builder.Services.AddScoped<DataManager>();
 
 
@@ -29,11 +33,30 @@ builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServe
                                                                      .EnableSensitiveDataLogging()
                                                                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true);
+//                                                              .AddEntityFrameworkStores<ApplicationContext>();
 
-//настраиваем identity систему
+
+//builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+//{
+//    options.ValidationInterval = TimeSpan.FromMinutes(10);
+//});
+
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
+    options.Cookie.HttpOnly = false;
+    options.Cookie.IsEssential = true;
+    options.Cookie.Name = "ShopLogin";
+});
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ identity пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(opts =>
 {
-    opts.User.RequireUniqueEmail = true;
+   // opts.SignIn.RequireConfirmedAccount = true;
+    opts.User.RequireUniqueEmail = false;
     opts.Password.RequiredLength = 6;
     opts.Password.RequireNonAlphanumeric = false;
     opts.Password.RequireLowercase = false;
@@ -41,7 +64,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(opts =>
     opts.Password.RequireDigit = false;
 }).AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
 
-//настраиваем authentication cookie
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ authentication cookie
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.Name = "shopAuth";
@@ -51,17 +74,22 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-//настраиваем политику авторизации для Admin area
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ Admin area
 builder.Services.AddAuthorization(x =>
 {
     x.AddPolicy("AdminArea", policy => { policy.RequireRole("admin"); });
+    x.AddPolicy("IdentityArea", policy => { policy.RequireRole("user"); });
 });
 
-//добавляем сервисы для контроллеров и представлений (MVC)
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (MVC)
 builder.Services.AddControllersWithViews(x =>
 {
     x.Conventions.Add(new AdminAreaAuthorization("Admin", "AdminArea"));
+    x.Conventions.Add(new AdminAreaAuthorization("Identity", "IdentityArea"));
 });
+
+
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -82,8 +110,10 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseSession();
+
 app.MapControllerRoute( "default", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute("admin", "{controller=Home}/{action=Index}/{id?}");
-//app.MapControllerRoute("adminShop", "{area:exists}/{controller=ShopModels}/{action=Index}/{id?}");
-
+app.MapControllerRoute("identity", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 app.Run();

@@ -11,7 +11,7 @@
 }
 else
 {
-    <title>Shoes Shop</title>
+    <title>@ViewData["Title"]</title>
 }
 @if (_shopData.MetaDescription != null)
 {
@@ -21,4 +21,3 @@ else
 {
     <meta name="keywords" content="@_shopData.MetaKeywords" />
 }
-<title>@ViewData["Title"]</title>

@@ -1,0 +1,47 @@
+﻿.row {
+    width: 100%;
+}
+
+    .row small {
+        margin-top: 1em;
+        color: lightgray;
+    }
+
+.brandBtn {
+    cursor: pointer;
+    border-radius: 10%;
+    border: 2px solid lightblue;
+    margin: 0 auto;
+}
+
+    .brandBtn:active {
+        border: blue;
+    }
+
+    .brandBtn:hover {
+        border: blue;
+    }
+
+.brandBtn.active{
+    border-color:black;
+}
+
+.filterSizeGroup {
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.filterSizeBtn {
+    font-size: 16px;
+    margin: 0.2em auto;
+    flex-grow: 0;
+    vertical-align: middle;
+}
+
+    .filterSizeBtn:active {
+        border: blue;
+    }
+
+.filterSlider {
+    margin-top: 1em;
+}
