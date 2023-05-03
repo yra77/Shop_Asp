@@ -113,7 +113,8 @@ app.UseAuthorization();
 app.UseSession();
 
 app.MapControllerRoute( "default", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-app.MapControllerRoute("admin", "{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute("identity", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute("admin", "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 app.Run();

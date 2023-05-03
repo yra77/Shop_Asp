@@ -211,7 +211,7 @@
                 cache: true,
                 success: function (result) 
                 {
-                    console.log("AAAAAAAAAaa " + result);
+                    //console.log("AAAAAAAAAaa " + result);
                     if(result === 'No')
                     {
                         document.getElementById("Email").style.borderColor = 'red';
@@ -226,8 +226,6 @@
                         window.location.href = '@Url.Action("Index", "Home")';
                     }
                     
-                    // var elem = document.getElementById(dataid);//знаходимо та виділяємо картку з екрану
-                    // elem.remove();
                 },
                 error: function (jqXHR, textStatus) {
 

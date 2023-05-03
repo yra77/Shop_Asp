@@ -1,0 +1,29 @@
+﻿@model Product
+@{
+
+}
+
+<div>
+     
+    <div class="container mt-3 mb-3 homeCarousel">
+
+        <h3 class="fw-bold text-black text-start">New Collection</h3>
+
+        <div class="slider">
+            @foreach (Photo item in Model.Photos_Large)
+            {
+                <div class="slide d-flex">
+                    <img src="~/Images/@item.Image" alt="@Model.Name" />          
+                </div>
+            }
+            <button class="btn btn-next"></button>
+            <button class="btn btn-prev"></button>
+        </div>
+    </div>
+
+
+
+</div>
+
+<script src="~/js/Sliders/Carousel.js" asp-append-version="true"></script>
+<link rel="stylesheet" href="~/js/Sliders/Css/Carousel.css" asp-append-version="true" />

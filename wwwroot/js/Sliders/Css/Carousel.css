@@ -1,11 +1,26 @@
-﻿.slider {
-    height: 60vh;
-    display: flex;
-    place-items: center;
-    width: 100%;
-    position: sticky;
-    overflow: hidden;
+﻿
+@media (max-width: 576px) {
+    .slider {
+        height: 40vh;
+        display: flex;
+        place-items: center;
+        width: 100%;
+        position: sticky;
+        overflow: hidden;
+    }
 }
+
+@media (min-width: 577px) {
+    .slider {
+        height: 90vh;
+        display: flex;
+        place-items: center;
+        width: 100%;
+        position: sticky;
+        overflow: hidden;
+    }
+}
+
 
 .slide {
     width: 100%;
@@ -47,12 +62,12 @@
     right: 2%;
 }
 
-.slide .textH2{
-    position:absolute;
-    margin-left:5%;
-    margin-top:1em;
+.slide .textH2 {
+    position: absolute;
+    margin-left: 5%;
+    margin-top: 1em;
     color: red;
-    z-index:9999;
+    z-index: 9999;
 }
 
 .slide .textH3 {
@@ -65,8 +80,8 @@
 
 .slide .textH5 {
     position: absolute;
-    top:90%;
-    left:5%;
+    top: 90%;
+    left: 5%;
     color: gray;
     z-index: 9999;
 }

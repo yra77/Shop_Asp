@@ -127,14 +127,12 @@
                 async: true,
                 cache: false,
                 success: function (result) {
-                    var elem = document.getElementById(dataid);//знаходимо та виділяємо картку з екрану
+                    var elem = document.getElementById(dataid);//знаходимо та видaляємо картку з екрану
                     elem.remove();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                    
                     console.error(jqXHR);
-                  //  let errorDetails = doParseResponseErrorDetails(jqXHR);
-                  //  doPopStatus("ERROR", "Something went haywire in the post. Try Again.<p>" + jqXHR.status + ": " + jqXHR.statusText + "<br />" + '<div class="bs-callout bs-callout-danger">' + errorDetails + "</div></p>", "modal-header alert-danger", "fa fa-exclamation-circle text-danger", "alert", "text-danger");
                 }
             });
 
@@ -142,119 +140,3 @@
     };
 
 </script>
-
-
-@*
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Brand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sizes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Colors)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Count)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsNew)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsBestSeller)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DescriptionEn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DescriptionUa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brand)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Sizes)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Colors)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Count)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Gender)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsNew)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsBestSeller)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DescriptionEn)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DescriptionUa)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-
-                <td>
-
-                    @for(int i = 0; i < 3; i++)
-                    {
-                        <div class="col form-group mt-4">
-                            <label asp-for="@item.Photos_Large[i].Image"
-                                   class="control-label text-secondary text-opacity-75">
-                            </label>
-
-                            <input type="file"
-                           asp-for="@item.Photos_Large[i].Id"
-                           name="ProdImgPath"
-                                   class="input form-control form-control-sm" />
-
-                            <img class="img d-block m-auto"
-                                 alt="Shop snickers"
-                                 src="~/Images/@item.Photos_Large[i].Image" />
-                        </div>
-                    }
-                </td>
-
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>*@

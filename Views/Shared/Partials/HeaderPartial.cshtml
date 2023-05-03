@@ -37,12 +37,12 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index" asp-route-id="">Products</a>
                     </li>
                     @if (session)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+                            <a class="nav-link text-dark" asp-area="Identity" asp-controller="Cart" asp-action="Index">Cart</a>
                         </li>
                     }
                     <li class="nav-item">
@@ -60,7 +60,6 @@
                     </li>
                 </ul>
 
-
                 <div class="heder_search_filter justify-content-center">
 
                     <input type="image"
@@ -73,15 +72,16 @@
                            name="search"
                            placeholder="search"
                            class="searchInp border-secondary bg-transparent shadow-none"
-                           onClick="OnFocusInp_Search()" />
+                           onclick="OnFocusInp_Search(event)" />
 
                     <button type="button"
-                            class="btn btn-sm btn-outline-secondary shadow-none mb-1">
+                            class="btn btn-sm btn-outline-secondary shadow-none mb-1"
+                            onclick="ClickStartSearch()"
+                    >
                         Search
                     </button>
 
                 </div>
-
 
             </div>
         </div>
@@ -90,20 +90,30 @@
     <div class="text-center mt-2 mb-4">
         @foreach (var brand in brands)
         {
-            <img class="brandsImg border border-info rounded-pill"
+            <a asp-area=""
+               asp-controller="Products"
+               asp-action="Index"
+               asp-route-id="@brand.NameBrand"
+            class="text-decoration-none">
+
+                <img class="brandsImg border border-info rounded-pill"
                  src="~/Images/@brand.LogoBrands"
                  data-id="@brand.NameBrand"
                  width="50"
                  height="30"
-                 alt="@brand.NameBrand" />
+                 alt="@brand.NameBrand" 
+                 />
+             </a>
         }
     </div>
 
-
     @await Component.InvokeAsync("Modal",  new { parameters=await Component.InvokeAsync("Filter"), isMessage=false})
+
 </header>
 
 <script>
+
+    let searchStr = "";
 
     function ClickModal_Filter(){
         $('#modal').modal('show');
@@ -114,7 +124,47 @@
         $('#modal').modal('dispose');
     }
 
-    window.onload = function(){
+    function OnFocusInp_Search(event) {
+        var inp = event.target;
+        let nameReg = new RegExp("[sa-zA-Z0-9]");
 
+        inp.addEventListener("input", (e) => {
+            if (!nameReg.test(e.data)) {
+                inp.value = inp.value.replace(e.data, '');
+            }
+            searchStr = inp.value;
+        });
     }
+
+    function ClickStartSearch()
+    {
+        let filterData = JSON.stringify({ SearchStr: searchStr, 
+                                            Genders: new Array(),
+                                            Brands: new Array(), 
+                                            Sizes: new Array(), 
+                                            MinMaxPrice: new Array() 
+        });
+
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("Index", "Products")',
+            contentType: "application/json",
+            data: filterData,
+            async: true,
+            cache: false,
+            success: function (result) {
+                if (result === 'No') {
+                }
+                else {
+                    window.location.href = '@Url.Action("Index", "Products")';
+                }
+                console.log(result);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+                console.error(jqXHR);
+            }
+        });
+    }
+
 </script>

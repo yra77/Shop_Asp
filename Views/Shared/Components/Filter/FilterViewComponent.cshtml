@@ -68,28 +68,10 @@
 </div>
 
 <link rel="stylesheet" href="~/css/Filter.css" asp-append-version="true" />
-
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
 
 <script>
-
-    function ClickModalComplite(event) {
-
-        const min = document.getElementById('rangeMin').value;
-        const max = document.getElementById('rangeMax').value;
-        // genders
-        // brands
-        //sizes
-
-        console.log(min + " " + max);
-        genders.forEach((item) => { console.log(item); });
-        brands.forEach((item) => { console.log(item); });
-        sizes.forEach((item) => { console.log(item); });
-        
-
-        $('#modal').modal('hide');
-        $('#modal').modal('dispose');
-    }
 
     let genders = new Array();
     let brands = new Array();
@@ -138,6 +120,50 @@
         }
         event.target.classList.toggle("active");
             //  console.log(event.srcElement.innerText);
+    }
+
+   
+    function SendData(){
+
+        const min = document.getElementById('rangeMin').value;
+        const max = document.getElementById('rangeMax').value;
+        const prices = new Array(min, max);
+     
+        //console.log(min + " " + max);
+        //genders.forEach((item) => { console.log(item); });
+        //brands.forEach((item) => { console.log(item); });
+        //sizes.forEach((item) => { console.log(item); });
+
+        let filterData = JSON.stringify({SearchStr:"", Genders: genders, Brands: brands, Sizes: sizes, MinMaxPrice: prices });
+        
+        $.ajax({
+            type: "post",
+            url: '@Url.Action("Index", "Products")',
+            contentType: "application/json",
+            data: filterData,
+            async: true,
+            cache: false,
+            success: function (result) {
+                if (result === 'No') {
+                }
+                else {
+                    window.location.href = '@Url.Action("Index", "Products")';
+                }
+                console.log(result);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+                console.error(jqXHR);
+            }
+        });
+    }
+
+    function ClickModalComplite() {
+
+        SendData();
+
+        $('#modal').modal('hide');
+        $('#modal').modal('dispose');
     }
 
 </script>
