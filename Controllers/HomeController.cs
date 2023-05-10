@@ -3,11 +3,10 @@
 using Shop_Asp.Models;
 using Shop_Asp.Domain;
 using Shop_Asp.Domain.Helpers;
+using Shop_Asp.Domain.Entities;
 
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 
 
 namespace Shop_Asp.Controllers
@@ -29,14 +28,14 @@ namespace Shop_Asp.Controllers
 
 
         public IActionResult Index()
-        {
+        {         
             var arr = _dataManager.ProductsRepo.GetProducts();
             ViewBag.NewProducts = arr.Where(x => x.IsNew == true).ToList();
             ViewBag.BestProducts = arr.Where(x => x.IsBestSeller == true).ToList();
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
             return View();
         }
@@ -56,11 +55,16 @@ namespace Shop_Asp.Controllers
                 var result = _dataManager.LoginRepo.GetLogin(model);
                 if (result != null)
                 {
+                    List<Cart> carts = _dataManager.CartRepo.GetProducts();
+                    HttpContext.Session.Set<List<Cart>>("UserCart", carts);
+                    HttpContext.Session.Set<string>("UserEmail", model.Email);
                     HttpContext.Session.Set<bool>("IsLogin", true);
                     return this.Ok("Ok");// RedirectToAction("AuthUser", "Home");
                 }
                 else
                 {
+                    HttpContext.Session.Set<List<Cart>>("UserCart", new List<Cart>());
+                    HttpContext.Session.Set<string>("UserEmail", "");
                     HttpContext.Session.Set<bool>("IsLogin", false);
                     ModelState.AddModelError(nameof(Login.Email), "Неверный логин или пароль");
                     return Ok("No");
@@ -82,17 +86,25 @@ namespace Shop_Asp.Controllers
                 if (result > 0)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    List<Cart> carts = _dataManager.CartRepo.GetProducts();
+                    HttpContext.Session.Set<List<Cart>>("UserCart", carts);
+                    HttpContext.Session.Set<string>("UserEmail", user.Email);
                     HttpContext.Session.Set<bool>("IsLogin", true);
                     return this.Ok("Ok");
                 }
                 else
                 {
+                    HttpContext.Session.Set<List<Cart>>("UserCart", new List<Cart>());
+                    HttpContext.Session.Set<string>("UserEmail", "");
                     HttpContext.Session.Set<bool>("IsLogin", false);
+
                     return this.Ok("No");// ModelState.AddModelError(nameof(Login.Email), "Неверный логин или пароль");
                 }
             }
             catch
             {
+                HttpContext.Session.Set<List<Cart>>("UserCart", new List<Cart>());
+                HttpContext.Session.Set<string>("UserEmail", "");
                 HttpContext.Session.Set<bool>("IsLogin", false);
                 return this.Ok("No");
             }
@@ -101,6 +113,8 @@ namespace Shop_Asp.Controllers
 
         public IActionResult Logout()
         {
+            HttpContext.Session.Set<List<Cart>>("UserCart", new List<Cart>());
+            HttpContext.Session.Set<string>("UserEmail", "");
             HttpContext.Session.Set<bool>("IsLogin", false);
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");

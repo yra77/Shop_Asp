@@ -1,0 +1,211 @@
+﻿@inject IHttpContextAccessor HttpContextAccessor
+@inject DataManager _dataManager
+
+@model IEnumerable<Shop_Asp.Domain.Entities.Cart>
+
+@{
+    ViewData["Title"] = "Cart";
+    var session = HttpContextAccessor.HttpContext.Session.Get<bool>("IsLogin") | false;
+    List<int> listCount = new List<int>();
+}
+
+<div class="container">
+
+    <h4 class="text-center">Cart</h4>
+
+
+    @if (session)
+    {
+        if (Model.Count() > 0)
+        {
+            <div class="row m-auto mt-5">
+                
+                @foreach (var order in Model)
+                {
+                    <div class="col-1 card shadow mt-4 m-auto p-0"
+                         style="width: 18rem;"
+                         id="_@order.Id">
+
+                        @{
+                            var product = await _dataManager.ProductsRepo.GetProduct(order.ProductId);
+                        }
+
+                        <img class="card-img-top"
+                             src="~/Images/@product.Photos_Large[0].Image"
+                             alt="@product.Name" />
+
+                        <div class="card-body">
+
+                            <label class="text-secondary mt-3">Brand: <span class="fw-bold text-black"> @product.Brand</span></label>
+                            <label class="text-secondary mt-3 d-block">Name: <span class="fw-bold text-black"> @product.Name</span></label>
+
+                            <label class="text-secondary mt-3">Color: </label>
+                            <span class="btn btn-outline-info rounded-circle"
+                                  style="background-color:@order.Color; width:25px; height:25px; margin-bottom:0.5em;">
+                            </span>
+
+                            <label class="text-secondary d-block mt-3">Size: <span class="fw-bold text-black">@order.Size</span></label>
+
+                            <div class="d-flex mt-3">
+
+                                <label class="text-secondary me-2 mt-1">Quantity :</label>
+
+                                <img onclick="ClickMinus(event, 1, @order.Id, @product.Price)"
+                                     style="cursor:pointer;"
+                                     src="~/Images/minus_icon.png"
+                                     alt="icon minus"
+                                     width="25"
+                                     height="25" />
+
+                                <label class="quantity ms-3 me-3 fw-bold fs-5" id="@order.Id">@order.BuyCount</label>
+
+                                <img onclick="ClickPlus(event, @product.Count, @order.Id, @product.Price)"
+                                     style="cursor:pointer;"
+                                     src="~/Images/plus_icon.png"
+                                     alt="icon plus"
+                                     width="25"
+                                     height="25" />
+
+                            </div>
+                            @{
+                                var count = product.Price * order.BuyCount;
+                                listCount.Add(count);
+                            }
+
+                            <label class="text-secondary d-block mt-3 mb-2">Price: <span class="@order.Id fw-bold text-black">@count</span>$</label>
+                        </div>
+
+                        <button class="btn-sm btn-danger mt-2"
+                                onclick="DeleteOrder(event, @order.Id)">
+                            Delete
+                        </button>
+
+                    </div>
+                }
+
+            </div>
+
+            <h5 class="text-secondary mt-5 mb-2">Total: <span class="fw-bold text-black" id="texttotal">@listCount.Sum()</span>$</h5>
+
+            <div id="textError" class="text-center text-danger fw-bold fs-4"></div>
+
+            <button class="btn btn-info text-white w-100 mt-5 mb-5"
+                    id="checkoutBtn"
+                    onclick="ClickCheckout()">
+                Checkout query
+            </button>
+        }
+        else
+        {
+            <h4 class="text-info text-center mt-5">You haven't chosen anything yet</h4>
+        }
+    }
+</div>
+
+<script>
+
+    let totalSum = document.getElementById("texttotal");
+
+
+    function ClickMinus(event, min, id, price) {
+        let countText = document.getElementById(id);
+        let sum = document.getElementsByClassName(id);
+
+        if (parseInt(countText.innerText) > min) {
+            countText.innerText = parseInt(countText.innerText) - 1;
+            sum[0].innerText = parseInt(countText.innerText) * price;
+            totalSum.innerText = parseInt(totalSum.innerText) - price;
+        }
+    }
+
+    function ClickPlus(event, max, id, price) {
+        let countText = document.getElementById(id);
+        let sum = document.getElementsByClassName(id);
+
+        console.log(document.getElementById("_" + id))
+
+        if (parseInt(countText.innerText) < max) {
+            countText.innerText = parseInt(countText.innerText) + 1;
+            sum[0].innerText = parseInt(countText.innerText) * price;
+            totalSum.innerText = parseInt(totalSum.innerText) + price;
+        }
+    }
+
+    function DeleteOrder(event, id){
+
+        $.ajax({
+            type: "post",
+            url: "/Identity/Cart/DeleteOrder",
+            data: { id: id },
+            async: true,
+            cache: false,
+            success: function (result) {
+                if (result === "No") {
+                    window.location.href = '@Url.Action("AuthUser", "Home")';
+                }
+                else if (result === "Ok") {
+                    //міняємо суму та кількість
+                    let sum = document.getElementsByClassName(id);
+                    totalSum.innerText = parseInt(totalSum.innerText) - parseInt(sum[0].innerText);
+                        var elem = document.getElementById("_" + id);//знаходимо та видaляємо картку з екрану
+                    elem.remove();
+
+                    //міняємо кількість ордерів на іконкє корзини
+                    let badgeCount = document.getElementById('cartBadge');
+                    badgeCount.innerText = parseInt(badgeCount.innerText) - 1;
+
+                    if(parseInt(badgeCount.innerText) === 0)
+                    {
+                        document.querySelector('#checkoutBtn').style.visibility = 'hidden';
+                    }
+                    // console.log(result);
+                }
+                else {
+                    document.getElementById("textError").innerText = "Trouble with deletion";
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+                console.error(jqXHR);
+            }
+        });
+    }
+
+    function ClickCheckout() {
+        let lists = document.getElementsByClassName("quantity");
+        let arr = new Array();
+
+        for (let i = 0; i < lists.length; i++) {
+            arr.push({ quantity: lists[i].innerText, id: lists[i].id });
+        }
+
+
+        let cartdata = JSON.stringify({ Quantity_Id: arr, TotalSum: totalSum.innerText });
+
+        $.ajax({
+            type: "post",
+            url: "/Identity/Cart/CheckoutOrder",
+            contentType: "application/json",
+            data: cartdata,
+            async: true,
+            cache: false,
+            success: function (result) {
+                if (result === "No") {
+                    window.location.href = '@Url.Action("AuthUser", "Home")';
+                }
+                else if (result === "Ok") {
+                    console.log(result);
+                    window.location.href = '@Url.Action("Index", "Products")';
+                }
+                else {
+                    document.getElementById("textError").innerText = "Trouble with deletion";
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error(jqXHR);
+            }
+        });
+
+    }
+
+</script>

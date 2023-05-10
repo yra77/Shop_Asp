@@ -1,12 +1,18 @@
-﻿@using Shop_Asp.Domain.Helpers
-@using Microsoft.AspNetCore.Http
+﻿
 @inject IHttpContextAccessor HttpContextAccessor
 @inject DataManager _dataManager
+
 @{
+    var carts = 0;
     var shopData = _dataManager.ShopRepo.GetShopData().ToList()[0];
     var brands = _dataManager.BrandsRepo.GetBrands();
     var session = HttpContextAccessor.HttpContext.Session.Get<bool>("IsLogin") | false;
+    if (session)
+    {
+        carts = HttpContextAccessor.HttpContext.Session.Get<List<Cart>>("UserCart").Count;
+    }
 }
+
 <header>
     <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-light bg-white border-bottom box-shadow mb-3">
 
@@ -63,10 +69,10 @@
                 <div class="heder_search_filter justify-content-center">
 
                     <input type="image"
-                         class="btnFilter"
-                         src="~/Images/filter.png"
-                         alt="filters"
-                         onclick="ClickModal_Filter()" />
+                           class="btnFilter"
+                           src="~/Images/filter.png"
+                           alt="filters"
+                           onclick="ClickModal_Filter()" />
 
                     <input type="text"
                            name="search"
@@ -76,8 +82,7 @@
 
                     <button type="button"
                             class="btn btn-sm btn-outline-secondary shadow-none mb-1"
-                            onclick="ClickStartSearch()"
-                    >
+                            onclick="ClickStartSearch()">
                         Search
                     </button>
 
@@ -91,35 +96,73 @@
         @foreach (var brand in brands)
         {
             <a asp-area=""
-               asp-controller="Products"
-               asp-action="Index"
-               asp-route-id="@brand.NameBrand"
-            class="text-decoration-none">
+           asp-controller="Products"
+           asp-action="Index"
+           asp-route-id="@brand.NameBrand"
+               class="text-decoration-none">
 
                 <img class="brandsImg border border-info rounded-pill"
-                 src="~/Images/@brand.LogoBrands"
-                 data-id="@brand.NameBrand"
-                 width="50"
-                 height="30"
-                 alt="@brand.NameBrand" 
-                 />
-             </a>
+                     src="~/Images/@brand.LogoBrands"
+                     data-id="@brand.NameBrand"
+                     width="50"
+                     height="30"
+                     alt="@brand.NameBrand" />
+            </a>
         }
     </div>
 
     @await Component.InvokeAsync("Modal",  new { parameters=await Component.InvokeAsync("Filter"), isMessage=false})
 
+    @if (session)
+    {
+        <a class="btn rounded-circle iconCartBtn" asp-area="Identity" asp-controller="Cart" asp-action="Index">
+            <img height=18 width=18 src="~/Images/cart.png" alt="icon cart" />
+            <Badge class="fs-4 text-danger fw-bold" id="cartBadge">@carts</Badge>
+        </a>
+    }
+
+    <img id="buttonScrollTop" src='~/Images/ic_up.png' alt="arrow up" />
+    
+    @if (HttpContextAccessor.HttpContext.Request.Path != "/")//не показуємо кнопку якщо ми на сторінці - home '/'
+    {
+        <button type="submit" 
+                class="btn btn-secondary btn-sm mb-3 ms-4 shadow-none" 
+                onClick="history.go(-1); return false;"
+                >
+                Back
+        </button>
+    }
 </header>
 
 <script>
+ 
+   $(this).on("load", function(){
+
+        let path = document.location.pathname.split('/').pop();
+       //console.log(path);
+       let aElems = document.getElementsByTagName("a");
+       
+       for(let i = 0; i < aElems.length; i++)
+       {
+           if(path === aElems[i].innerText
+           || (path === "" && aElems[i].innerText === "Home")
+           || (path === "AuthUser" && aElems[i].innerText === "Login")) 
+           {
+                aElems[i].className += " active";
+           }
+       }
+   });
+
 
     let searchStr = "";
+    //Hide Back to top button
+    $("#buttonScrollTop").hide();
 
-    function ClickModal_Filter(){
+    function ClickModal_Filter() {
         $('#modal').modal('show');
     }
 
-    function CloseModal(){
+    function CloseModal() {
         $('#modal').modal('hide');
         $('#modal').modal('dispose');
     }
@@ -136,13 +179,13 @@
         });
     }
 
-    function ClickStartSearch()
-    {
-        let filterData = JSON.stringify({ SearchStr: searchStr, 
-                                            Genders: new Array(),
-                                            Brands: new Array(), 
-                                            Sizes: new Array(), 
-                                            MinMaxPrice: new Array() 
+    function ClickStartSearch() {
+        let filterData = JSON.stringify({
+            SearchStr: searchStr,
+            Genders: new Array(),
+            Brands: new Array(),
+            Sizes: new Array(),
+            MinMaxPrice: new Array()
         });
 
         $.ajax({
@@ -166,5 +209,21 @@
             }
         });
     }
+
+    $(document).ready(function () {
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 100) {
+                $("#buttonScrollTop").fadeIn();
+            } else {
+                $("#buttonScrollTop").fadeOut();
+            }
+        });
+
+        $("#buttonScrollTop").on("click", function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    });
+
 
 </script>

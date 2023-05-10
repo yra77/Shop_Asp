@@ -1,19 +1,36 @@
 ﻿@model Product
 @{
-
+    ViewData["Title"] = Model.Name;
 }
 
+<button type="submit" class="btn btn-primary" onClick="history.go(-1); return false;">Back</button>
+<div class="card" id="myModal">
+    <div class="modalcontent">
+        
+        <div class="container m-3" id="modalcontent">
+
+        </div>
+
+        <hr class="mt-2">
+        <div class="float-end mt-auto">
+        <button class="btn btn-info shadow-none" onclick="ModalComplete()" id="btnModalComplete">Ok</button>
+            <button class="btn btn-secondary shadow-none" id="closeModal">Close</button>
+        </div>
+    </div>
+</div>
+
+
 <div>
-     
+
     <div class="container mt-3 mb-3 homeCarousel">
 
-        <h3 class="fw-bold text-black text-start">New Collection</h3>
+        <h3 class="fw-bold text-black text-start">@Model.Name</h3>
 
         <div class="slider">
             @foreach (Photo item in Model.Photos_Large)
             {
                 <div class="slide d-flex">
-                    <img src="~/Images/@item.Image" alt="@Model.Name" />          
+                    <img src="~/Images/@item.Image" alt="@Model.Name" />
                 </div>
             }
             <button class="btn btn-next"></button>
@@ -21,9 +38,187 @@
         </div>
     </div>
 
+    <div class="container mb-5 mt-5">
 
+        <h4>@Model.Brand.ToUpperInvariant() </h4>
+        <h5 class="text-center"> @Model.Name</h5>
+        <p class="text-secondary mt-5 mb-3">@Model.DescriptionEn</p>
 
+        <div class="list-group">
+
+            <h5 class="text-secondary mb-3">gender : <span class="text-black fw-bold"> @Model.Gender</span></h5>
+
+            <h5 class="text-secondary">colors : </h5>
+            <div class="d-flex list-group-item border-0">
+                @{
+                    var colors = Model.Colors.Split(' ');
+                    foreach (var color in colors)
+                    {
+                        <button style="background-color:@color; margin-left:0.5em; height:35px; width:35px;"
+                                class="btn btn-outline-secondary rounded-circle">
+                        </button>
+                    }
+                }
+            </div>
+
+            <h5 class="text-secondary mt-3">sizes : </h5>
+            <div class="d-flex list-group-item border-0">
+                @{
+                    var sizes = Model.Sizes.Split(' ');
+                    foreach (var size in sizes)
+                    {
+                        <span class="ms-2 fs-5 fw-bold">@size</span>
+                    }
+                }
+            </div>
+
+            <h5 class="text-secondary mb-3 mt-3">count :</h5>
+            <span class="ms-4 text-black fw-bolder"> @Model.Count pieces</span>
+
+            <h5 class="text-secondary mt-5">price: </h5>
+            <div class="list-group-item border-0 mb-5">
+                <h4 class="fw-bold">@Model.Price<small class="text-secondary">$</small></h4>
+            </div>
+
+            <div class="d-flex list-group-item border-0 mb-5 w-100">
+
+                <button class="btn btn-info w-50 text-white me-1 shadow-none"
+                        style="border-radius:0px;"
+                        asp-area="Identity"
+                        asp-controller="Home"
+                        asp-action="Index"
+                        asp-route-id="@Model.Id">
+                    Add Favorite
+                </button>
+               
+                <button class="btn btn-info w-50 text-white me-1 shadow-none"
+                   style="border-radius:0px;"
+                   onclick="AddCartClick(event, @Model.Id)"
+                   type="button">
+                    Add Cart
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="~/js/Sliders/Carousel.js" asp-append-version="true"></script>
 <link rel="stylesheet" href="~/js/Sliders/Css/Carousel.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/MyModal/MyModal.css" asp-append-version="true" />
+
+<script>
+    var $body = $('body');
+    var contentmodal = document.getElementById("modalcontent");
+
+    $('#closeModal').on('click', () => {
+        $('#myModal').fadeOut();
+        $body.removeClass('no-scroll');
+        document.querySelector('#btnModalComplete').style.visibility = 'visible';
+    });
+
+    function AddCartClick (event, id) {
+        ResponseData(id);
+    };
+
+    function ResponseData(id)
+    {
+    
+        $.ajax({
+            type: "post",
+            url: "/Identity/Cart/SelectOrderData",
+            data: {id: id},
+            async: true,
+            cache: false,
+            success: function (result) {
+                if(result === "No")
+                {
+                    window.location.href = '@Url.Action("AuthUser", "Home")';
+                    // console.log(result);
+                }
+                else
+                {
+                    $('#myModal').fadeIn();
+                    $body.addClass('no-scroll');
+                    contentmodal.innerHTML = result;
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+                console.error(jqXHR);
+            }
+        });
+    }
+
+    let _quantity = 0;
+    let _color = "";
+    let _size = 0;
+
+    function SelectCount(event){
+        _quantity = event.target.value;
+    }
+
+    function SelectSizeBtn(event, size){
+        _size = size;
+     //   event.target.classList.toggle("active");
+    }
+
+    function SelectColorBtn(event){
+        _color = event.target.style.backgroundColor;
+    }
+    
+    function ModalComplete(){
+      let productId = document.getElementById("hiddenInput").value;
+
+      if(productId > 0 && _quantity > 0 && _color !== "" && _size > 30)
+      {
+
+            $('#myModal').fadeOut();
+            $body.removeClass('no-scroll');
+
+            $.ajax({
+                type: "post",
+                url: "/Identity/Cart/CartAddData",
+                data: { productId: productId, quantity: _quantity, color: _color, size: _size},
+                async: true,
+                cache: false,
+                success: function (result) {
+                    if (result === "No") {
+                        window.location.href = '@Url.Action("AuthUser", "Home")';
+                         //console.log("Error" + result);
+                    }
+                    else if(result === "Ok")
+                    {
+                        document.querySelector('#btnModalComplete').style.visibility = 'hidden';
+                        $('#myModal').fadeIn();
+                        $body.addClass('no-scroll');
+                        contentmodal.style.color = 'Green';
+                        contentmodal.innerHTML = "Adding to cart is done";
+                        
+                        //міняємо кількість ордерів на іконкє корзини
+                        let badgeCount = document.getElementById('cartBadge').innerText; 
+                        document.getElementById('cartBadge').innerText = parseInt(badgeCount) + 1;
+                        
+                        //console.log(result);
+                    }
+                    else
+                    {
+                        document.querySelector('#btnModalComplete').style.visibility = 'hidden';
+                        $('#myModal').fadeIn();
+                        $body.addClass('no-scroll');
+                        contentmodal.style.color = 'Red';
+                        contentmodal.innerHTML = "An error has occurred. Try again.";
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    console.error(jqXHR);
+                }
+            });
+      }
+      else
+      {
+          document.getElementById("errorText").innerText = "Not all data has been selected";
+      }
+    }
+
+</script>

@@ -5,14 +5,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-@if (_shopData.Title != null)
+@*@if (_shopData.Title != null)
 {
     <title>@_shopData.Title</title>
 }
 else
-{
+{*@
     <title>@ViewData["Title"]</title>
-}
+@*}*@
 @if (_shopData.MetaDescription != null)
 {
     <meta name="description" content="@_shopData.MetaDescription" />

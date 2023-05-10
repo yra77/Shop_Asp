@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Identity\" />
     <Folder Include="Models\ViewComponents\" />
     <Folder Include="wwwroot\Images\productPhoto\" />
     <Folder Include="wwwroot\sass\" />

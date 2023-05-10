@@ -24,6 +24,7 @@ builder.Services.AddScoped<IBrandsRepository, BrandsRepository>();
 builder.Services.AddScoped<IShopRepository, ShopRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+builder.Services.AddScoped<ICartsRepository, CartsRepository>();
 builder.Services.AddScoped<DataManager>();
 
 
@@ -78,14 +79,14 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddAuthorization(x =>
 {
     x.AddPolicy("AdminArea", policy => { policy.RequireRole("admin"); });
-    x.AddPolicy("IdentityArea", policy => { policy.RequireRole("user"); });
+  //  x.AddPolicy("IdentityArea", policy => { policy.RequireRole("user"); });
 });
 
 //��������� ������� ��� ������������ � ������������� (MVC)
 builder.Services.AddControllersWithViews(x =>
 {
     x.Conventions.Add(new AdminAreaAuthorization("Admin", "AdminArea"));
-    x.Conventions.Add(new AdminAreaAuthorization("Identity", "IdentityArea"));
+   // x.Conventions.Add(new AdminAreaAuthorization("Identity", "IdentityArea"));
 });
 
 
@@ -102,6 +103,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -111,10 +113,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSession();
-
-app.MapControllerRoute( "default", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute("identity", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute("admin", "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute("default", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
 app.Run();

@@ -19,6 +19,12 @@ a {
     color: #0077cc;
 }
 
+a.active{
+    font-weight:700;
+    color:lightgray;
+    font-size:17px;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;
@@ -96,3 +102,48 @@ button.accept-policy {
     width:55px;
 }
 /*End Brand*/
+
+/* Cart button*/
+.iconCartBtn {
+    background-color: rgba(5, 177, 105, 0.199);
+    border: 2px solid rgb(6, 170, 170);
+    width: 2.4em;
+    height: 2.4em;
+    z-index: 9998;
+    position: fixed;
+    top: 14em;
+    right: 0;
+    bottom: 0;
+    left: 1em;
+    box-shadow: 0 7px 7px #ccc;
+}
+
+    .iconCartBtn img {
+        margin: -4px 0 0 -4px;
+    }
+/*END cart button*/
+
+/* button scroll to top*/
+#buttonScrollTop {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+    margin-left: auto;
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    border: 2px solid lightgray;
+    background-color: transparent;
+    box-shadow: 0 5px 10px #ccc;
+    cursor: pointer;
+}
+
+#buttonScrollTop:hover {
+    background-color: lightgray;
+}
+
+#buttonScrollTop:active {
+    background-color: lightgray;
+}
+/* END button scroll to top*/
