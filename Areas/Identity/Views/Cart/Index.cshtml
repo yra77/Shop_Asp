@@ -179,7 +179,6 @@
             arr.push({ quantity: lists[i].innerText, id: lists[i].id });
         }
 
-
         let cartdata = JSON.stringify({ Quantity_Id: arr, TotalSum: totalSum.innerText });
 
         $.ajax({
@@ -195,10 +194,10 @@
                 }
                 else if (result === "Ok") {
                     console.log(result);
-                    window.location.href = '@Url.Action("Index", "Products")';
+                    window.location.href = '@Url.Action("Checkout", "Checkout")';
                 }
                 else {
-                    document.getElementById("textError").innerText = "Trouble with deletion";
+                    document.getElementById("textError").innerText = "Problems, try again";
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {

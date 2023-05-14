@@ -1,9 +1,10 @@
 ﻿
 
 using Shop_Asp.Domain.Repositories.Interfaces;
+using Shop_Asp.Domain.Helpers;
 using Shop_Asp.Models;
 using Microsoft.EntityFrameworkCore;
-using Shop_Asp.Domain.Helpers;
+
 
 namespace Shop_Asp.Domain.Repositories.EntityFramework
 {
@@ -44,6 +45,28 @@ namespace Shop_Asp.Domain.Repositories.EntityFramework
                 _context.Logins.Update(user);//Entry(item).State = EntityState.Modified;
             }
 
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<Login?> GetUserAccount(string email)
+        {
+            return await _context.Logins.FirstOrDefaultAsync(x => x.Email == email);
+        }
+
+        public async Task<int> UpdateUserAccount(string email, 
+                                                 string phone,
+                                                 string name, 
+                                                 string address, 
+                                                 int cartstatus, 
+                                                 string favoriteList,
+                                                 string pathPhoto)
+        {
+
+            var result = _context.Logins.FirstOrDefault(x => x.Email == email);
+
+           
+               // _context.Logins.Update(user);
+          
             return await _context.SaveChangesAsync();
         }
 

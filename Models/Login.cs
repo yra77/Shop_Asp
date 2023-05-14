@@ -19,7 +19,7 @@ namespace Shop_Asp.Models
 
         [Required]
         public string Password { get; set; }
-        //  public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = "+0000000000";
         public string Address { get; set; }
         public int CartStatus { get; set; } = 0;
         public string FavoriteList { get; set; } = "";

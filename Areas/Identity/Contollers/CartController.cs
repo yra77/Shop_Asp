@@ -56,6 +56,7 @@ namespace Shop_Asp.Areas.Identity.Contollers
             return new SelectOrderResult(product);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> CartAddData(int productId, int quantity, string color, int size)
         {
@@ -84,6 +85,7 @@ namespace Shop_Asp.Areas.Identity.Contollers
             return Ok("Ok");
         }
 
+
         [HttpPost]
         public IActionResult CheckoutOrder([FromBody] object param)
         {
@@ -92,11 +94,42 @@ namespace Shop_Asp.Areas.Identity.Contollers
                 return Ok("No");
             }
 
-           // var a = JsonConvert.DeserializeObject<AjaxCheckoutCart>(param.ToString());
-           // Debug.WriteLine("PPPPPPPPPPPPP " + a.Quantity_Id[0].quantity);
+            var str = param.ToString();
+            if (str != null)
+            {
+                var carts = HttpContext.Session.Get<List<Cart>>("UserCart");
+                var a = JsonConvert.DeserializeObject<AjaxCheckoutCart>(str);
 
+                // изменить в базе если были изменения
+                bool isChange = false;
+                foreach (var item in carts)
+                {
+                    foreach (var it in a.Quantity_Id)
+                    {
+                        if(item.Id == it.id && item.BuyCount != it.quantity)
+                        {
+                            item.BuyCount = it.quantity;
+                           if(_dataManager.CartRepo.AddUpdateOrder(item) <= 0)
+                            {
+                                return Ok("NoSave");
+                            }
+                            isChange = true;
+                        }
+                    }
+                }
+
+                if (isChange)
+                {
+                    HttpContext.Session.Set<List<Cart>>("UserCart", carts);
+                }
+
+                HttpContext.Session.Set<int>("TotalsumCart", a.TotalSum);
+
+                return Ok("Ok");
+            }
             return Ok("NoSave");
         }
+
 
         [HttpPost]
         public async Task<IActionResult> DeleteOrder(int id)
