@@ -2,9 +2,6 @@
 
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Diagnostics;
 
 
 namespace Shop_Asp.Views.Shared.Components.Modal

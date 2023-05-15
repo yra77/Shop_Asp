@@ -115,7 +115,7 @@
 
     @if (session)
     {
-        <a class="btn rounded-circle iconCartBtn" asp-area="Identity" asp-controller="Cart" asp-action="Index">
+        <a class="btn rounded-circle iconCartBtn shadow-none" asp-area="Identity" asp-controller="Cart" asp-action="Index">
             <img height=18 width=18 src="~/Images/cart.png" alt="icon cart" />
             <Badge class="fs-4 text-danger fw-bold" id="cartBadge">@carts</Badge>
         </a>
